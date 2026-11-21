@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to **Visual Web Editor**!
+Thank you for your interest in contributing to **Carostar Design**!
 
 ## Architecture Principles
 

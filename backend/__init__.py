@@ -1,1 +1,1 @@
-"""Backend package for Visual Web Editor."""
+"""Backend package for Carostar Design."""

@@ -1,4 +1,4 @@
-// Strict allowlist of HTML elements supported by the Visual Web Editor.
+// Strict allowlist of HTML elements supported by Carostar Design.
 // Only elements defined in this catalog can be added to the canvas.
 
 export const HTML_ELEMENT_CATALOG = [

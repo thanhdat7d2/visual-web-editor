@@ -63,7 +63,7 @@ def serve(port: int = 8000, open_in_browser: bool = True) -> None:
 
     url = f"http://localhost:{port}"
     with ReusableThreadingTCPServer(("", port), EditorRequestHandler) as httpd:
-        print(f"Serving Visual Web Editor at {url}")
+        print(f"Serving Carostar Design at {url}")
         if open_in_browser:
             threading.Thread(target=_open_browser, args=(url,), daemon=True).start()
         try:

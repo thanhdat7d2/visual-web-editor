@@ -1,4 +1,4 @@
-# Visual Web Editor
+# Carostar Design
 
 A lightweight, Figma-inspired visual HTML page builder with an infinite pan/zoom canvas, strict semantic HTML element palette, live DOM tree inspector, and static HTML/CSS code export — built with **zero build tools** using native ES Modules, modular CSS, and Python's standard library.
 
@@ -31,7 +31,7 @@ A lightweight, Figma-inspired visual HTML page builder with an infinite pan/zoom
 ## Project Structure
 
 ```text
-visual-web-editor/
+carostar-design/
 ├── .github/workflows/
 │   └── ci.yml                 # Automated CI (Python & JS test suites)
 ├── backend/
