@@ -1,0 +1,22 @@
+# Private notes / scratch docs
+doc/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+
+# Generated exports (keep folder structure only)
+exports/*
+!exports/.gitkeep
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

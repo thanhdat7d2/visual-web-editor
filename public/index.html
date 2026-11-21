@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antigravity UI Builder</title>
-    
+    <title>Web UI Builder</title>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <!-- Moveable.js for drag/resize/rotate -->
     <script src="https://unpkg.com/moveable@0.51.0/dist/moveable.min.js"></script>
-    <!-- Panzoom for infinite canvas -->
-    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
     <!-- App Styles -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
     <div id="app">
         <!-- Top Navigation / Toolbar -->
         <header class="toolbar">
-            <div class="logo">AG Builder</div>
+            <div class="logo">Web UI Builder</div>
             <div class="tools">
-                <button class="tool-btn active" data-tool="select" title="Select (V)"><i class="icon-select"></i> Select</button>
-                <div class="separator"></div>
-                <button class="tool-btn" data-tool="rect" title="Rectangle (R)"><i class="icon-rect"></i> Rect</button>
-                <button class="tool-btn" data-tool="circle" title="Circle (O)"><i class="icon-circle"></i> Circle</button>
-                <button class="tool-btn" data-tool="text" title="Text (T)"><i class="icon-text"></i> Text</button>
-                <div class="separator"></div>
-                <button class="tool-btn" data-tool="button" title="Button"><i class="icon-button"></i> Button</button>
-                <button class="tool-btn" data-tool="input" title="Input"><i class="icon-input"></i> Input</button>
+                <button class="tool-btn active" id="btn-tool-select" data-tool="select"
+                    title="Select (V)">Select</button>
+                <div id="active-tool-pill" class="active-tool-pill" style="display: none;">
+                    <span>Add <code id="active-tool-tag">&lt;div&gt;</code> — click canvas to place</span>
+                    <button id="btn-cancel-tool" class="pill-close" title="Cancel (Esc)">&times;</button>
+                </div>
             </div>
             <div class="actions">
                 <button id="btn-save" class="action-btn primary">Export HTML</button>
@@ -39,27 +39,45 @@
         </header>
 
         <div class="main-workspace">
-            <!-- Left Sidebar: Layers & Components -->
+            <!-- Left Sidebar: HTML Elements Palette & Layers -->
             <aside class="sidebar left-sidebar">
-                <div class="panel-section">
-                    <h3>Frames (Pages)</h3>
-                    <ul id="frames-list" class="layer-list">
-                        <!-- Frame items injected here -->
-                    </ul>
-                    <button id="btn-add-frame" class="full-btn">+ New Frame</button>
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active" data-tab="elements">Elements <span id="element-count-badge"
+                            class="badge">116</span></button>
+                    <button class="sidebar-tab" data-tab="layers">DOM Tree <span id="tree-count-badge"
+                            class="badge">0</span></button>
                 </div>
-                <div class="panel-section flex-grow">
-                    <h3>Elements (Layers)</h3>
-                    <ul id="layers-list" class="layer-list">
-                        <!-- Layer items injected here -->
-                    </ul>
+
+                <!-- Elements Palette Tab -->
+                <div id="tab-elements" class="tab-content active">
+                    <div class="palette-controls">
+                        <input type="text" id="element-search" class="full-input" placeholder="Search HTML tags...">
+                        <div id="category-filters" class="category-filters">
+                            <button class="cat-pill active" data-category="All">All</button>
+                            <button class="cat-pill" data-category="Root">Root</button>
+                            <button class="cat-pill" data-category="Sectioning">Sectioning</button>
+                            <button class="cat-pill" data-category="Elements">Elements</button>
+                            <button class="cat-pill" data-category="Text">Text</button>
+                        </div>
+                        <div class="palette-hint">Click to place on canvas &bull; Double-click to quick-add</div>
+                    </div>
+                    <div id="elements-palette" class="elements-palette">
+                        <!-- Categorized HTML element chips injected here -->
+                    </div>
                 </div>
-                <div class="panel-section">
-                    <h3>Components</h3>
-                    <ul id="components-list" class="layer-list">
-                        <!-- Component items injected here -->
-                    </ul>
-                    <button id="btn-create-component" class="full-btn" disabled>Create Component</button>
+
+                <!-- DOM / Element Tree Tab -->
+                <div id="tab-layers" class="tab-content">
+                    <div class="tree-toolbar">
+                        <button id="btn-add-frame" class="tree-action-btn">+ New Frame</button>
+                        <div class="tree-toolbar-right">
+                            <button id="btn-expand-all" class="tree-icon-btn" title="Expand All">Expand</button>
+                            <button id="btn-collapse-all" class="tree-icon-btn" title="Collapse All">Collapse</button>
+                        </div>
+                    </div>
+                    <div id="dom-tree" class="dom-tree">
+                        <!-- Recursive DOM/Element tree injected here -->
+                    </div>
                 </div>
             </aside>
 
@@ -67,17 +85,31 @@
             <main class="canvas-container" id="canvas-container">
                 <div class="canvas-wrapper" id="canvas-wrapper">
                     <!-- The active frame sits here -->
-                    <div id="active-frame" class="frame" data-id="frame-1">
+                    <div id="active-frame" class="frame" data-id="frame-1" data-label="Frame 1">
                         <!-- Elements get appended here -->
                     </div>
+                </div>
+                <div class="canvas-hud">
+                    <span class="hud-hint">Space + Drag to pan &bull; Scroll to zoom</span>
+                    <button id="btn-zoom-out" class="hud-btn" title="Zoom Out">&minus;</button>
+                    <button id="btn-zoom-reset" class="hud-btn hud-zoom-label" title="Reset View (100%)">100%</button>
+                    <button id="btn-zoom-in" class="hud-btn" title="Zoom In">+</button>
                 </div>
             </main>
 
             <!-- Right Sidebar: Properties -->
             <aside class="sidebar right-sidebar">
-                <div id="properties-empty">Select an element to edit properties.</div>
-                
+                <div id="properties-empty">Select an HTML element to edit its properties.</div>
+
                 <div id="properties-panel" style="display: none;">
+                    <div class="prop-section element-meta-header">
+                        <div class="element-tag-row">
+                            <code id="prop-el-tag" class="el-tag-badge">&lt;div&gt;</code>
+                            <span id="prop-el-category" class="el-cat-badge">Sectioning</span>
+                        </div>
+                        <p id="prop-el-desc" class="el-desc-text"></p>
+                    </div>
+
                     <div class="prop-section">
                         <h4>Layout</h4>
                         <div class="prop-row">
@@ -109,24 +141,25 @@
                     </div>
 
                     <div class="prop-section" id="section-text" style="display: none;">
-                        <h4>Text Settings</h4>
+                        <h4>Content</h4>
                         <div class="prop-row">
-                            <textarea id="prop-inner-text" class="full-input" rows="3"></textarea>
+                            <textarea id="prop-inner-text" class="full-input" rows="3"
+                                placeholder="Element text or inner content..."></textarea>
                         </div>
                     </div>
 
-                    <div class="prop-section" id="section-input" style="display: none;">
-                        <h4>Input Settings</h4>
-                        <div class="prop-row">
-                            <div class="prop-group full">
-                                <label>Placeholder</label>
-                                <input type="text" id="prop-placeholder" class="full-input">
-                            </div>
+                    <div class="prop-section" id="section-attrs">
+                        <h4>HTML Attributes</h4>
+                        <div id="attrs-list" class="attrs-list"></div>
+                        <div class="attr-add-row">
+                            <input type="text" id="attr-new-name" class="full-input" placeholder="attr (e.g. href)">
+                            <input type="text" id="attr-new-value" class="full-input" placeholder="value">
+                            <button id="btn-add-attr" class="action-btn secondary" type="button">+</button>
                         </div>
                     </div>
 
                     <div class="prop-section">
-                        <h4>Design & Style</h4>
+                        <h4>Design &amp; Style</h4>
                         <div class="prop-row">
                             <div class="prop-group full">
                                 <label>Background Color</label>
@@ -192,10 +225,11 @@
                     <div class="prop-section">
                         <h4>Custom CSS</h4>
                         <div class="prop-row">
-                            <textarea id="prop-custom-css" class="full-input" rows="4" placeholder="e.g. box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></textarea>
+                            <textarea id="prop-custom-css" class="full-input" rows="4"
+                                placeholder="e.g. box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></textarea>
                         </div>
                     </div>
-                    
+
                     <div class="prop-section actions-section">
                         <button id="btn-duplicate-el" class="action-btn secondary full-btn">Duplicate Element</button>
                         <button id="btn-delete-el" class="action-btn danger full-btn">Delete Element</button>
@@ -205,7 +239,8 @@
         </div>
     </div>
 
-    <!-- App Logic -->
-    <script src="js/app.js"></script>
+    <!-- Modular ES App Entry -->
+    <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
